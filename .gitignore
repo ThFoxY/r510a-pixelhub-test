@@ -1,0 +1,12 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.idea/
+*.swp
+# Variables d'environnement
+.env
+# Notes personnelles du TP
+notes.md
