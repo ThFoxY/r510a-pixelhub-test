@@ -9,4 +9,4 @@ obj/
 # Variables d'environnement
 .env
 # Notes personnelles du TP
-notes.md
+/notes/

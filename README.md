@@ -1,6 +1,6 @@
 # PixelHub — R5.A.10
 
-Dépôt de départ du module *Nouveaux paradigmes de bases de données*. Une seule application, un moteur de plus à chaque séance.
+Dépôt de départ du module _Nouveaux paradigmes de bases de données_. Une seule application, un moteur de plus à chaque séance.
 
 ## Démarrer
 
@@ -10,6 +10,7 @@ docker compose up -d          # lance les 4 moteurs
 docker compose ps             # vérifier : 4 services "running"
 cd src/PixelHub.Api
 dotnet user-secrets set "ConnectionStrings:Postgres" "Host=localhost;Port=15432;Database=pixelhub;Username=pixelhub;Password=<POSTGRES_PASSWORD>"   # une seule fois
+dotnet user-secrets set "ConnectionStrings:Mongo" "mongodb://pixelhub:<MONGODB_PASSWORD>@localhost:27018/?authSource=admin" # une seule fois
 dotnet run                    # l'API écoute sur http://localhost:5199
 ```
 
@@ -17,11 +18,11 @@ Pour tester les endpoints : ouvrir `src/PixelHub.Api/PixelHub.Api.http` (Visual 
 
 Ports (décalés volontairement pour éviter les conflits avec un moteur déjà installé) :
 
-| Moteur | Port |
-|---|---|
-| PostgreSQL | 15432 |
-| MongoDB | 27018 |
-| Redis | 16379 |
+| Moteur                | Port  |
+| --------------------- | ----- |
+| PostgreSQL            | 15432 |
+| MongoDB               | 27018 |
+| Redis                 | 16379 |
 | Neo4j — interface web | 17474 |
 | Neo4j — Bolt (driver) | 17687 |
 
