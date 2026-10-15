@@ -27,6 +27,12 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(_ =>
 
 builder.Services.AddSingleton<ILeaderboard, RedisLeaderboard>();
 
+builder.Services.AddSingleton<MongoGameCatalog>();
+builder.Services.AddSingleton<IGameCatalog>(sp =>
+    new CachedGameCatalog(
+        sp.GetRequiredService<MongoGameCatalog>(),
+        sp.GetRequiredService<IConnectionMultiplexer>()));
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
