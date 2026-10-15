@@ -31,3 +31,27 @@ Accept: application/json
 ### Séance 2 — agrégation : note moyenne par genre
 GET {{host}}/games/stats
 Accept: application/json
+
+### Séance 3 — leaderboard : attribuer des points à Nova
+POST {{host}}/leaderboard/Nova/points/100
+Content-Type: application/json
+
+### Séance 3 — leaderboard : attribuer des points à Ombre
+POST {{host}}/leaderboard/Ombre/points/200
+Content-Type: application/json
+
+### Séance 3 — leaderboard : attribuer des points à Krayz
+POST {{host}}/leaderboard/Krayz/points/10
+Content-Type: application/json
+
+### Séance 3 — top 3 du classement
+GET {{host}}/leaderboard/top/3
+Content-Type: application/json
+
+### Séance 3 — top 5 du classement
+GET {{host}}/leaderboard/top/5
+Content-Type: application/json
+
+### Séance 3 — rang d'un joueur
+GET {{host}}/leaderboard/rank/Ombre
+Content-Type: application/json
