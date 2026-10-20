@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PixelHub.Api.Data;
 using PixelHub.Api.Models;
+using PixelHub.Api.Services;
 using MongoDB.Driver;
 using PixelHub.Api.Repositories;
 using StackExchange.Redis;
@@ -45,6 +46,12 @@ builder.Services.AddSingleton<IDriver>(_ =>
     ));
 
 builder.Services.AddSingleton<ISocialGraph, Neo4jSocialGraph>();
+
+// ---------- Séance 4 bis — l'application à quatre moteurs ----------
+builder.Services.AddSingleton<RedisSales>();
+// Scoped, et non singleton : ces services utilisent le DbContext, qui est scoped (une instance par requête).
+builder.Services.AddScoped<ShopService>();
+// builder.Services.AddScoped<PlayerProfileService>();
 
 var app = builder.Build();
 
@@ -114,5 +121,22 @@ app.MapGet("/social/{pseudo}/recommendations",
 
 app.MapGet("/social/{pseudo}/friend-suggestions",
     async (string pseudo, ISocialGraph g) => await g.SuggestFriendsAsync(pseudo));
+
+// ---------- Séance 4 bis — la boutique (mission 2) ----------
+app.MapPost("/shop/{pseudo}/buy/{titre}", async (string pseudo, string titre, ShopService shop) =>
+{
+    var r = await shop.BuyAsync(pseudo, titre);
+    return r.Statut switch
+    {
+        AchatStatut.Ok               => Results.Ok(r.Recu),
+        AchatStatut.JeuInconnu       => Results.NotFound(new { erreur = $"Jeu inconnu : {titre}" }),
+        AchatStatut.JoueurInconnu    => Results.NotFound(new { erreur = $"Joueur inconnu : {pseudo}" }),
+        AchatStatut.SoldeInsuffisant => Results.Conflict(new { erreur = "Solde insuffisant" }),
+        AchatStatut.DejaPossede      => Results.Conflict(new { erreur = "Jeu déjà acheté" }),
+        _                            => Results.StatusCode(500)
+    };
+});
+
+app.MapGet("/shop/bestsellers", async (RedisSales ventes) => await ventes.GetTopAsync(3));
 
 app.Run();

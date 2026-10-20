@@ -32,4 +32,6 @@ public class CachedGameCatalog : IGameCatalog
     public Task<List<Game>> GetByGenreAsync(string genre) => _source.GetByGenreAsync(genre);
     public Task<List<Game>> GetTopRatedAsync(int count) => _source.GetTopRatedAsync(count);
     public Task<List<GenreStats>> GetStatsByGenreAsync() => _source.GetStatsByGenreAsync();
+    public Task<Game?> GetByTitleAsync(string titre) =>
+    _source.GetByTitleAsync(titre);
 }
