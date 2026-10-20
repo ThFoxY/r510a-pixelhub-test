@@ -11,6 +11,7 @@ docker compose ps             # vérifier : 4 services "running"
 cd src/PixelHub.Api
 dotnet user-secrets set "ConnectionStrings:Postgres" "Host=localhost;Port=15432;Database=pixelhub;Username=pixelhub;Password=<POSTGRES_PASSWORD>"   # une seule fois
 dotnet user-secrets set "ConnectionStrings:Mongo" "mongodb://pixelhub:<MONGODB_PASSWORD>@localhost:27018/?authSource=admin" # une seule fois
+dotnet user-secrets set "Neo4j:Password" "<NEO4J_PASSWORD>"   # une seule fois
 dotnet run                    # l'API écoute sur http://localhost:5199
 ```
 
