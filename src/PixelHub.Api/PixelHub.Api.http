@@ -52,22 +52,38 @@ Content-Type: application/json
 GET {{host}}/leaderboard/top/5
 Content-Type: application/json
 
-### Séance 3 — rang d'un joueur
+### Séance 3 — rang d'Ombre
 GET {{host}}/leaderboard/rank/Ombre
 Content-Type: application/json
 
-### Séance 4 — amis d'un joueur
+### Séance 4 — amis de Krayz
 GET {{host}}/social/Krayz/friends
 Content-Type: application/json
 
-### Séance 4 — recommandations pour un joueur
+### Séance 4 — recommandations pour un Nova (profondeur 2 par défaut)
 GET {{host}}/social/Nova/recommendations
 Content-Type: application/json
 
-### Séance 4 — recommandations pour un joueur (profondeur 3)
+### Séance 4 — recommandations pour Nova (profondeur 3)
 GET {{host}}/social/Nova/recommendations?depth=3
 Content-Type: application/json
 
-### Séance 4 — suggestions de jeux
+### Séance 4 — suggestions de jeux pour Luna
 GET {{host}}/social/Luna/friend-suggestions
 Content-Type: application/json
+
+### Séance 4 bis — boutique : Nova achète Terraria (1200 pièces)
+POST {{host}}/shop/Nova/buy/Terraria
+
+### Séance 4 bis — boutique : un titre avec espaces et apostrophe s'encode dans l'URL
+POST {{host}}/shop/Nova/buy/Baldur%27s%20Gate%203
+
+### Séance 4 bis — boutique : jeu gratuit (FPS à 0 pièce)
+POST {{host}}/shop/Nova/buy/Valorant
+
+### Séance 4 bis — boutique : jeu inconnu (404)
+POST {{host}}/shop/Nova/buy/Tetris
+
+### Séance 4 bis — meilleures ventes (Redis)
+GET {{host}}/shop/bestsellers
+Accept: application/json
