@@ -55,3 +55,19 @@ Content-Type: application/json
 ### Séance 3 — rang d'un joueur
 GET {{host}}/leaderboard/rank/Ombre
 Content-Type: application/json
+
+### Séance 4 — amis d'un joueur
+GET {{host}}/social/Krayz/friends
+Content-Type: application/json
+
+### Séance 4 — recommandations pour un joueur
+GET {{host}}/social/Nova/recommendations
+Content-Type: application/json
+
+### Séance 4 — recommandations pour un joueur (profondeur 3)
+GET {{host}}/social/Nova/recommendations?depth=3
+Content-Type: application/json
+
+### Séance 4 — suggestions de jeux
+GET {{host}}/social/Luna/friend-suggestions
+Content-Type: application/json

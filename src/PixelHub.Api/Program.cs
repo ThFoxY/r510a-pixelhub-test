@@ -4,6 +4,7 @@ using PixelHub.Api.Models;
 using MongoDB.Driver;
 using PixelHub.Api.Repositories;
 using StackExchange.Redis;
+using Neo4j.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,18 @@ builder.Services.AddSingleton<IGameCatalog>(sp =>
         sp.GetRequiredService<MongoGameCatalog>(),
         sp.GetRequiredService<IConnectionMultiplexer>()));
 
+// Neo4j
+builder.Services.AddSingleton<IDriver>(_ =>
+    GraphDatabase.Driver(
+        builder.Configuration["Neo4j:Uri"],
+        AuthTokens.Basic(
+            builder.Configuration["Neo4j:User"],
+            builder.Configuration["Neo4j:Password"]
+        )
+    ));
+
+builder.Services.AddSingleton<ISocialGraph, Neo4jSocialGraph>();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -52,8 +65,9 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.MapGet("/", () => "PixelHub API — séance 2 OK");
+app.MapGet("/", () => "PixelHub API — séance 4 OK");
 
+// ---------- Séance 1 — PostgreSQL ----------
 app.MapGet("/players", async (PixelHubContext db) =>
     await db.Players.ToListAsync());
 
@@ -66,6 +80,7 @@ app.MapPost("/players", async (Player newPlayer, PixelHubContext db) =>
     return Results.Created($"/players/{newPlayer.Id}", newPlayer);
 });
 
+// ---------- Séance 2 — MongoDB ----------
 app.MapGet("/games", async (IGameCatalog catalog) =>
     await catalog.GetAllAsync());
 
@@ -78,6 +93,7 @@ app.MapGet("/games/top/{count:int}", async (int count, IGameCatalog catalog) =>
 app.MapGet("/games/stats", async (IGameCatalog catalog) =>
     await catalog.GetStatsByGenreAsync());
 
+// ---------- Séance 3 — Redis ----------
 app.MapPost("/leaderboard/{pseudo}/points/{points:double}",
     async (string pseudo, double points, ILeaderboard lb) =>
     { await lb.AddPointsAsync(pseudo, points); return Results.Ok(); });
@@ -88,5 +104,15 @@ app.MapGet("/leaderboard/top/{count:int}",
 app.MapGet("/leaderboard/rank/{pseudo}",
     async (string pseudo, ILeaderboard lb) => await lb.GetRankAsync(pseudo));
 
+// ---------- Séance 4 — Neo4j ----------
+app.MapGet("/social/{pseudo}/friends",
+    async (string pseudo, ISocialGraph g) => await g.GetFriendsAsync(pseudo));
+
+app.MapGet("/social/{pseudo}/recommendations",
+    async (string pseudo, int? depth, ISocialGraph g) =>
+        await g.RecommendGamesAsync(pseudo, depth ?? 2));
+
+app.MapGet("/social/{pseudo}/friend-suggestions",
+    async (string pseudo, ISocialGraph g) => await g.SuggestFriendsAsync(pseudo));
 
 app.Run();
